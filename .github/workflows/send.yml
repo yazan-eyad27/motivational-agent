@@ -1,0 +1,28 @@
+name: Daily Motivation Agent
+
+on:
+  schedule:
+    - cron: '0 5 * * *'  # يوميًا الساعة 5 صباحًا UTC (8 صباحًا السعودية)
+  workflow_dispatch:     # لتشغيله يدويًا أيضًا
+
+jobs:
+  send_motivation:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.x'
+
+    - name: Install dependencies
+      run: pip install openai
+
+    - name: Run script
+      run: python main.py
+      env:
+        OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+        EMAIL: ${{ secrets.EMAIL }}
+        EMAIL_PASSWORD: ${{ secrets.EMAIL_PASSWORD }}
