@@ -1,0 +1,30 @@
+name: Daily Gold Price Email
+
+on:
+  schedule:
+    - cron: "0 6 * * *"  # كل يوم الساعة 6 صباحًا بتوقيت UTC (9 صباحًا بتوقيت السعودية)
+  workflow_dispatch:      # لتشغيله يدويًا أيضًا من GitHub
+
+jobs:
+  send-gold-price:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.10"
+
+      - name: Install dependencies
+        run: pip install requests
+
+      - name: Run main.py
+        env:
+          EMAIL_USER: ${{ secrets.EMAIL_USER }}
+          EMAIL_PASS: ${{ secrets.EMAIL_PASS }}
+          RECEIVER_EMAIL: ${{ secrets.RECEIVER_EMAIL }}
+          METALS_API_KEY: ${{ secrets.METALS_API_KEY }}
+        run: python main.py
